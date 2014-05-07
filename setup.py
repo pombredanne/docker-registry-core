@@ -22,11 +22,9 @@ requirements = [line for line in requirements_txt]
 
 ver = sys.version_info
 
-# 2.5 doesn't have json and 2.6 native json raw_decode doesn't fit the bill
+# 2.6 native json raw_decode doesn't fit the bill, so add simple to our req
 if ver[0] == 2 and ver[1] <= 6:
     requirements.insert(0, 'simplejson')
-
-packages = ['droid', 'droid.core', 'droid.drivers']
 
 setuptools.setup(
     name=__title__,
@@ -46,6 +44,7 @@ setuptools.setup(
                  'Programming Language :: Python :: 2.7',
                  'Programming Language :: Python :: 3.2',
                  'Programming Language :: Python :: 3.3',
+                 'Programming Language :: Python :: 3.4',
                  'Programming Language :: Python :: Implementation :: CPython',
                  'Programming Language :: Python :: Implementation :: PyPy',
                  'Operating System :: OS Independent',
@@ -55,7 +54,7 @@ setuptools.setup(
     license=open('./LICENSE').read(),
     namespace_packages=['droid', 'droid.drivers'],
     package_dir={'droid': 'lib'},
-    packages=packages,
+    packages=['droid', 'droid.core', 'droid.drivers'],
     install_requires=requirements,
     zip_safe=True,
     setup_requires=['nose', 'flake8'],
