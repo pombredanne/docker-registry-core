@@ -54,7 +54,7 @@ setuptools.setup(
     license=open('./LICENSE').read(),
     namespace_packages=['droid', 'droid.drivers'],
     package_dir={'droid': 'lib'},
-    packages=['droid', 'droid.core', 'droid.drivers'],
+    packages=['droid', 'droid.core', 'droid.drivers', 'droid.tests'],
     install_requires=requirements,
     zip_safe=True,
     setup_requires=['nose', 'flake8'],
