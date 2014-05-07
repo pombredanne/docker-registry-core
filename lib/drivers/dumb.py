@@ -17,7 +17,7 @@ class Storage(driver.Base):
 
     _storage = {}
 
-    def __init__(self):
+    def __init__(self, path=None):
         pass
 
     def exists(self, path):
