@@ -2,9 +2,9 @@
 
 from nose.tools import raises
 
-from droid.core import driver
-from droid.core.exceptions import NotImplementedError
-import droid.drivers.dumb as driverspace
+from docker_registry.core import driver
+from docker_registry.core.exceptions import NotImplementedError
+import docker_registry.drivers.dumb as driverspace
 
 
 class Query(object):

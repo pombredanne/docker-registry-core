@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-droid.core.driver
+docker_registry.core.driver
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This file defines:
@@ -16,7 +16,7 @@ __all__ = ["fetch", "available", "Base"]
 
 import logging
 import pkgutil
-import droid.drivers
+import docker_registry.drivers
 
 from .exceptions import NotImplementedError
 
@@ -207,14 +207,14 @@ def fetch(name):
     :rtype: DockerConnection
     """
     try:
-        # module = __import__("droid.drivers.%s" % name)
-        module = __import__('droid.drivers.%s' % name, globals(), locals(),
-                            ['Storage'], 0)
-        logger.debug("Will return droid.drivers.%s.Storage" % name)
+        # module = __import__("docker_registry.drivers.%s" % name)
+        module = __import__('docker_registry.drivers.%s' % name, globals(),
+                            locals(), ['Storage'], 0)
+        logger.debug("Will return docker_registry.drivers.%s.Storage" % name)
     except Exception:
         raise NotImplementedError(
-            """You requested storage driver droid.drivers.%s
-which is not installed. Try `pip install droid-drivers-%s`
+            """You requested storage driver docker_registry.drivers.%s
+which is not installed. Try `pip install docker_registry-drivers-%s`
 or check your configuration. The following are currently
 available on your system: %s"""
             % (name, name, available())
@@ -224,4 +224,4 @@ available on your system: %s"""
 
 def available():
     return [modname for importer, modname, ispkg
-            in pkgutil.iter_modules(droid.drivers.__path__)]
+            in pkgutil.iter_modules(docker_registry.drivers.__path__)]

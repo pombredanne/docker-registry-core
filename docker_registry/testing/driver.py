@@ -6,8 +6,9 @@ import random
 import string
 
 from nose.tools import raises
-from droid.core import driver
-from droid.core.exceptions import FileNotFoundError
+from docker_registry.core import driver
+from docker_registry.core.compat import is_py2
+from docker_registry.core.exceptions import FileNotFoundError
 
 
 class Driver(object):
@@ -57,7 +58,21 @@ class Driver(object):
     def test_write_read_unicode(self):
         filename = self.gen_random_string()
 
-        content = u"∫"
+        content = u"∫".encode('utf8')
+        self._storage.put_content(filename, content)
+
+        ret = self._storage.get_content(filename)
+        assert ret == content
+        ret = self._storage.get_size(filename)
+        assert ret == len(content)
+
+    def test_write_read_unicode_str(self):
+        filename = self.gen_random_string()
+
+        content = "∫"
+        if is_py2:
+            content = content.decode('utf8')
+        content = content.encode('utf8')
         self._storage.put_content(filename, content)
 
         ret = self._storage.get_content(filename)
@@ -66,6 +81,17 @@ class Driver(object):
         assert ret == len(content)
 
         content = "∫"
+        self._storage.put_content(filename, content)
+
+        ret = self._storage.get_content(filename)
+        assert ret == content
+        ret = self._storage.get_size(filename)
+        assert ret == len(content)
+
+    def test_write_read_bytes(self):
+        filename = self.gen_random_string()
+
+        content = b"a"
         self._storage.put_content(filename, content)
 
         ret = self._storage.get_content(filename)
@@ -105,12 +131,12 @@ class Driver(object):
     @raises(FileNotFoundError)
     def test_remove_inexistent(self):
         filename = self.gen_random_string()
-        self._storage.get_content(filename)
+        self._storage.remove(filename)
 
     @raises(FileNotFoundError)
     def test_get_size_inexistent(self):
         filename = self.gen_random_string()
-        self._storage.get_content(filename)
+        self._storage.get_size(filename)
 
     # def test_stream(self):
     #     filename = self.gen_random_string()

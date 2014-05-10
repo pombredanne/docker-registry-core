@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-droid.core.exceptions
+docker_registry.core.exceptions
 ~~~~~~~~~~~~~~~~~~~~~
 
-Provide droid exceptions to be used consistently in the drivers and registry.
+Provide docker_registry exceptions to be used consistently in the drivers and registry.
 """
 
 __all__ = [
@@ -17,7 +17,7 @@ __all__ = [
 
 class UnspecifiedError(Exception):
 
-    """Base class for all exceptions in droid
+    """Base class for all exceptions in docker_registry
     """
 
     def __init__(self, *args, **kwargs):

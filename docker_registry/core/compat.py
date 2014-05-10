@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-droid.core.compat
+docker_registry.core.compat
 ~~~~~~~~~~~~~~~~~~~~~~
 
 This file defines a collection of properties to quickly identify what python

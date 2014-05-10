@@ -8,11 +8,11 @@ except ImportError:
 
 import sys
 
-from lib.core import __author__
-from lib.core import __email__
-from lib.core import __maintainer__
-from lib.core import __title__
-from lib.core import __version__
+from docker_registry.core import __author__
+from docker_registry.core import __email__
+from docker_registry.core import __maintainer__
+from docker_registry.core import __title__
+from docker_registry.core import __version__
 
 if sys.version_info < (2, 6):
     raise Exception("Docker registry requires Python 2.6 or higher.")
@@ -33,10 +33,11 @@ setuptools.setup(
     author_email=__email__,
     maintainer=__maintainer__,
     maintainer_email=__email__,
-    url='https://github.com/dmp42/droid-core',
+    url='https://github.com/dmp42/docker_registry-core',
     description="Backend drivers for the docker registry",
     long_description=open('./README.md').read(),
-    download_url='https://github.com/dmp42/droid-core/archive/master.zip',
+    download_url=
+        'https://github.com/dmp42/docker-registry-core/archive/master.zip',
     classifiers=['Development Status :: 4 - Beta',
                  'Intended Audience :: Developers',
                  'Programming Language :: Python',
@@ -52,11 +53,14 @@ setuptools.setup(
                  'License :: OSI Approved :: Apache Software License'],
     # platforms=['Independent'],
     license=open('./LICENSE').read(),
-    namespace_packages=['droid', 'droid.drivers'],
-    package_dir={'droid': 'lib'},
-    packages=['droid', 'droid.core', 'droid.drivers', 'droid.tests'],
+    namespace_packages=['docker_registry', 'docker_registry.drivers'],
+    # XXX setuptools breaks terribly when mixing namespaces and package_dir
+    # TODO must report this to upstream
+    # package_dir={'docker_registry': 'lib'},
+    packages=['docker_registry', 'docker_registry.core',
+              'docker_registry.drivers', 'docker_registry.testing'],
     install_requires=requirements,
     zip_safe=True,
-    setup_requires=['nose', 'flake8'],
+    setup_requires=open('./tests/requirements.txt').read(),
     test_suite='nose.collector'
 )

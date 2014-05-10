@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from droid.tests import Driver
-from droid.tests import Query
-import droid.drivers.dumb as driverspace
+from docker_registry.testing import Driver
+from docker_registry.testing import Query
+import docker_registry.drivers.dumb as driverspace
 
 
 class TestQuery(Query):

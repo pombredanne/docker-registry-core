@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-droid.core.drivers.dumb
+docker_registry.core.drivers.dumb
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This is a very dumb driver, which uses memory to store data.
@@ -9,8 +9,8 @@ Should only be used as inspiration
 
 """
 
-from droid.core import driver
-from droid.core.exceptions import FileNotFoundError
+from docker_registry.core import driver
+from docker_registry.core.exceptions import FileNotFoundError
 
 
 class Storage(driver.Base):

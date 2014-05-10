@@ -17,9 +17,9 @@
 #         record.color = self.LEVEL_COLORS[record.levelno]
 #         return logging.StreamHandler.format(self, record)
 
-# logging.getLogger("droid-core").addHandler(ColorHandler())
+# logging.getLogger("docker_registry-core").addHandler(ColorHandler())
 
-# log = logging.getLogger("droid-core")
+# log = logging.getLogger("docker_registry-core")
 
 # log.debug("Debug")
 # log.info("Info")
