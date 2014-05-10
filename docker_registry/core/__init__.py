@@ -30,7 +30,7 @@ __maintainer__ = 'Docker'
 __email__ = 'dev@docker.com'
 __status__ = 'Production'
 
-__title__ = 'docker_registry-core'
+__title__ = 'docker-registry-core'
 __build__ = 0x000000
 
 try:
