@@ -3,7 +3,8 @@
 docker_registry.core.exceptions
 ~~~~~~~~~~~~~~~~~~~~~
 
-Provide docker_registry exceptions to be used consistently in the drivers and registry.
+Provide docker_registry exceptions to be used consistently in the drivers
+and registry.
 """
 
 __all__ = [

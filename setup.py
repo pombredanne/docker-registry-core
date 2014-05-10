@@ -26,6 +26,8 @@ ver = sys.version_info
 if ver[0] == 2 and ver[1] <= 6:
     requirements.insert(0, 'simplejson')
 
+d = 'https://github.com/dmp42/docker-registry-core/archive/master.zip'
+
 setuptools.setup(
     name=__title__,
     version=__version__,
@@ -33,11 +35,10 @@ setuptools.setup(
     author_email=__email__,
     maintainer=__maintainer__,
     maintainer_email=__email__,
-    url='https://github.com/dmp42/docker_registry-core',
+    url='https://github.com/dmp42/docker-registry-core',
     description="Backend drivers for the docker registry",
-    long_description=open('./README.md').read(),
-    download_url=
-        'https://github.com/dmp42/docker-registry-core/archive/master.zip',
+    long_description=open('./README').read(),
+    download_url=d,
     classifiers=['Development Status :: 4 - Beta',
                  'Intended Audience :: Developers',
                  'Programming Language :: Python',
@@ -51,7 +52,7 @@ setuptools.setup(
                  'Operating System :: OS Independent',
                  'Topic :: Utilities',
                  'License :: OSI Approved :: Apache Software License'],
-    # platforms=['Independent'],
+    platforms=['Independent'],
     license=open('./LICENSE').read(),
     namespace_packages=['docker_registry', 'docker_registry.drivers'],
     # XXX setuptools breaks terribly when mixing namespaces and package_dir

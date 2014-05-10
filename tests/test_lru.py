@@ -29,7 +29,8 @@ class Dumb(object):
 
 class TestLru(object):
 
-    @patch('docker_registry.core.lru.redis.StrictRedis', mock_strict_redis_client)
+    @patch('docker_registry.core.lru.redis.StrictRedis',
+           mock_strict_redis_client)
     def setUp(self):
         lru.init()
         self._dumb = Dumb()
