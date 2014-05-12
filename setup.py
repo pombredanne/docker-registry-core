@@ -24,7 +24,7 @@ ver = sys.version_info
 
 # 2.6 native json raw_decode doesn't fit the bill, so add simple to our req
 if ver[0] == 2 and ver[1] <= 6:
-    requirements.insert(0, 'simplejson')
+    requirements.insert(0, 'simplejson>=2.0.9')
 
 d = 'https://github.com/dmp42/docker-registry-core/archive/master.zip'
 
