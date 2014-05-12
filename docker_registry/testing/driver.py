@@ -81,14 +81,6 @@ class Driver(object):
         ret = self._storage.get_size(filename)
         assert ret == len(content)
 
-        content = "∫"
-        self._storage.put_content(filename, content)
-
-        ret = self._storage.get_content(filename)
-        assert ret == content
-        ret = self._storage.get_size(filename)
-        assert ret == len(content)
-
     def test_write_read_bytes(self):
         filename = self.gen_random_string()
 
@@ -107,7 +99,7 @@ class Driver(object):
         ret = self._storage.get_content(filename)
         l = self._storage.get_size(filename)
 
-        content2 = self.gen_random_string()
+        content2 = self.gen_random_string().encode('utf8')
         self._storage.put_content(filename, content2)
         ret2 = self._storage.get_content(filename)
         l2 = self._storage.get_size(filename)
