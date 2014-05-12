@@ -15,3 +15,4 @@ class TestDriver(Driver):
     def __init__(self):
         self.scheme = 'dumb'
         self.path = ''
+        self.config = None

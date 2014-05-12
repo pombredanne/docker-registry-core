@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-# from unittest import TestCase
-# import cStringIO as StringIO
 import random
 import string
 
 from nose.tools import raises
 from docker_registry.core import driver
 from docker_registry.core.compat import is_py2
+from docker_registry.core.compat import bytes
+from docker_registry.core.compat import StringIO
 from docker_registry.core.exceptions import FileNotFoundError
 
 
@@ -139,42 +139,50 @@ class Driver(object):
         filename = self.gen_random_string()
         self._storage.get_size(filename)
 
-    # def test_stream(self):
-    #     filename = self.gen_random_string()
-    #     # test 7MB
-    #     content = self.gen_random_string(7 * 1024 * 1024)
+    def test_stream(self):
+        filename = self.gen_random_string()
+        # test 7MB
+        content = self.gen_random_string(7 * 1024 * 1024).encode('utf8')
+        # test exists
+        io = StringIO(content)
+        assert not self._storage.exists(filename)
 
-    #     assert not self._storage.exists(filename)
+        self._storage.stream_write(filename, io)
+        io.close()
 
-    #     # test exists
-    #     io = StringIO.StringIO(content)
-    #     self._storage.stream_write(filename, io)
-    #     io.close()
-    #     assert self._storage.exists(filename)
+        assert self._storage.exists(filename)
 
-    #     # test read / write
-    #     data = ''
-    #     for buf in self._storage.stream_read(filename):
-    #         data += buf
+        # test read / write
+        data = bytes()
+        for buf in self._storage.stream_read(filename):
+            data += buf
+        assert content == data
 
-    #     assert content == data
+        # test bytes_range only if the storage backend suppports it
+        if self._storage.supports_bytes_range:
+            b = random.randint(0, len(content) / 2)
+            bytes_range = (b, random.randint(b + 1, len(content) - 1))
+            data = bytes()
+            for buf in self._storage.stream_read(filename, bytes_range):
+                data += buf
+            expected_content = content[bytes_range[0]:bytes_range[1] + 1]
+            assert data == expected_content
 
-    #     # test bytes_range only if the storage backend suppports it
-    #     if self._storage.supports_bytes_range:
-    #         b = random.randint(0, len(content) / 2)
-    #         bytes_range = (b, random.randint(b + 1, len(content) - 1))
-    #         data = ''
-    #         for buf in self._storage.stream_read(filename, bytes_range):
-    #             data += buf
-    #         expected_content = content[bytes_range[0]:bytes_range[1] + 1]
-    #         assert data == expected_content
+        # test remove
+        self._storage.remove(filename)
+        assert not self._storage.exists(filename)
 
-    #     # test remove
-    #     self._storage.remove(filename)
-    #     assert not self._storage.exists(filename)
+    @raises(FileNotFoundError)
+    def test_inexistent_list_directory(self):
+        notexist = self.gen_random_string()
+        iterator = self._storage.list_directory(notexist)
+        iterator.next
 
-    # @raises(OSError)
-    # def test_inexistent_list_directory(self):
-    #     notexist = self.gen_random_string()
-    #     iterator = self._storage.list_directory(notexist)
-    #     next(iterator)
+    @raises(FileNotFoundError)
+    def test_empty_list_directory(self):
+        path = self.gen_random_string()
+        content = self.gen_random_string().encode('utf8')
+        self._storage.put_content(path, content)
+
+        iterator = self._storage.list_directory(path)
+        iterator.next

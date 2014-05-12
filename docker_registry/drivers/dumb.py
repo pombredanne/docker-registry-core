@@ -10,6 +10,7 @@ Should only be used as inspiration
 """
 
 from docker_registry.core import driver
+from docker_registry.core.compat import StringIO
 from docker_registry.core.exceptions import FileNotFoundError
 
 
@@ -17,8 +18,8 @@ class Storage(driver.Base):
 
     _storage = {}
 
-    def __init__(self, path=None):
-        pass
+    def __init__(self, path=None, config=None):
+        self.supports_bytes_range = True
 
     def exists(self, path):
         return path in self._storage
@@ -41,22 +42,63 @@ class Storage(driver.Base):
             raise FileNotFoundError('%s is not there' % path)
         del self._storage[path]
 
-    # def stream_read(self, path, bytes_range=None):
+    def stream_read(self, path, bytes_range=None):
+        if path not in self._storage:
+            raise FileNotFoundError('%s is not there' % path)
 
-    # def stream_write(self, path, fp):
-    #     """
-    #     Method to stream write
-    #     """
-    #     raise NotImplementedError(
-    #         "You must implement stream_write(self, path, fp) " +
-    #         "on your storage %s" %
-    #         self.__class__.__name__)
+        f = self._storage[path]
+        nb_bytes = 0
+        total_size = 0
+        if bytes_range:
+            f.seek(bytes_range[0])
+            total_size = bytes_range[1] - bytes_range[0] + 1
+        else:
+            f.seek(0)
+        while True:
+            buf = None
+            if bytes_range:
+                # Bytes Range is enabled
+                buf_size = self.buffer_size
+                if nb_bytes + buf_size > total_size:
+                    # We make sure we don't read out of the range
+                    buf_size = total_size - nb_bytes
+                if buf_size > 0:
+                    buf = f.read(buf_size)
+                    nb_bytes += len(buf)
+                else:
+                    # We're at the end of the range
+                    buf = ''
+            else:
+                buf = f.read(self.buffer_size)
+            if not buf:
+                break
+            yield buf
 
-    # def list_directory(self, path=None):
-    #     """
-    #     Method to list directory
-    #     """
-    #     raise NotImplementedError(
-    #         "You must implement list_directory(self, path=None) " +
-    #         "on your storage %s" %
-    #         self.__class__.__name__)
+    def stream_write(self, path, fp):
+        # Size is mandatory
+        if path not in self._storage:
+            self._storage[path] = StringIO()
+
+        f = self._storage[path]
+        try:
+            while True:
+                buf = fp.read(self.buffer_size)
+                if not buf:
+                    break
+                f.write(buf)
+        except IOError:
+            pass
+
+    def list_directory(self, path=None):
+        if path not in self._storage:
+            raise FileNotFoundError('%s is not there' % path)
+
+        ls = []
+        for k in self._storage.keys():
+            if (not k == path) and k.startswith(path):
+                ls.append(k)
+
+        if not len(ls):
+            raise FileNotFoundError('%s is not there' % path)
+
+        return ls

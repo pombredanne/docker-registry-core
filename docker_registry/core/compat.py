@@ -74,6 +74,8 @@ if is_py2:
     basestring = basestring
     # numeric_types = (int, long, float)
 
+    from cStringIO import StringIO  # noqa
+
 elif is_py3:
     logger.debug("This is python3")
     from urllib.parse import quote_plus  # noqa
@@ -83,3 +85,5 @@ elif is_py3:
     bytes = bytes
     basestring = (str, bytes)
     # numeric_types = (int, float)
+
+    from io import BytesIO as StringIO  # noqa
