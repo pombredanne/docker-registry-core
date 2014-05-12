@@ -13,14 +13,15 @@ from docker_registry.core.exceptions import FileNotFoundError
 
 class Driver(object):
 
-    def __init__(self, scheme, path=None):
+    def __init__(self, scheme, path=None, config=None):
         self.scheme = scheme
         self.path = path
+        self.config = config
 
     # Load the requested driver
     def setUp(self):
         storage = driver.fetch(self.scheme)
-        self._storage = storage(self.path)
+        self._storage = storage(self.path, self.config)
 
     def tearDown(self):
         pass
@@ -35,13 +36,13 @@ class Driver(object):
 
     def test_exists_existent_path(self):
         filename = self.gen_random_string()
-        content = self.gen_random_string()
+        content = self.gen_random_string().encode('utf8')
         self._storage.put_content(filename, content)
         assert self._storage.exists(filename)
 
     def test_write_read(self):
         filename = self.gen_random_string()
-        content = self.gen_random_string()
+        content = self.gen_random_string().encode('utf8')
         self._storage.put_content(filename, content)
 
         ret = self._storage.get_content(filename)
@@ -49,7 +50,7 @@ class Driver(object):
 
     def test_size(self):
         filename = self.gen_random_string()
-        content = self.gen_random_string()
+        content = self.gen_random_string().encode('utf8')
         self._storage.put_content(filename, content)
 
         ret = self._storage.get_size(filename)
@@ -101,7 +102,7 @@ class Driver(object):
 
     def test_write_read_twice(self):
         filename = self.gen_random_string()
-        content = self.gen_random_string()
+        content = self.gen_random_string().encode('utf8')
         self._storage.put_content(filename, content)
         ret = self._storage.get_content(filename)
         l = self._storage.get_size(filename)
@@ -118,7 +119,7 @@ class Driver(object):
 
     def test_remove_existent(self):
         filename = self.gen_random_string()
-        content = self.gen_random_string()
+        content = self.gen_random_string().encode('utf8')
         self._storage.put_content(filename, content)
         self._storage.remove(filename)
         assert not self._storage.exists(filename)

@@ -43,7 +43,7 @@ class Base(object):
     REPOSITORIES = 'repositories'
     IMAGES = 'images'
 
-    def __init__(self, host, port, basepath):
+    def __init__(self, path=None, config=None):
         pass
 
     # Set the IO buffer to 128kB
